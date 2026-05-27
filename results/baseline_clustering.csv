@@ -1,4 +1,4 @@
 feature_space,algorithm,n_clusters_target,n_clusters_pred,n_noise,noise_ratio,ari,nmi,seconds,params
 raw,BIRCH,26,26,0,0.0,0.5016473230566652,0.7438763191032529,6.160246849060059,"{""n_clusters"": ""K"", ""threshold"": 0.5, ""branching_factor"": 50}"
-raw,OPTICS,26,91,7132,0.9147107861998205,0.00036737665864220007,0.12468434009822764,40.77197313308716,"{""min_samples"": 5, ""metric"": ""euclidean"", ""cluster_method"": ""xi"", ""xi"": 0.01}"
-raw,Affinity Propagation,26,183,0,0.0,0.1852353006797233,0.6328722461420047,27.170530080795288,"{""damping"": 0.9, ""max_iter"": 300, ""convergence_iter"": 20, ""preference"": ""5%-tile of -squared euclidean similarity"", ""affinity"": ""precomputed""}"
+raw,OPTICS,26,6,873,0.11196614082339361,0.006196581883794432,0.07554581067947513,41.77537202835083,"{""min_samples"": 5, ""metric"": ""euclidean"", ""extraction"": ""cluster_optics_dbscan"", ""eps"": ""80%-tile of core_distances (auto)""}"
+raw,Affinity Propagation,26,148,0,0.0,0.20786517579002567,0.640458658080437,25.09007477760315,"{""damping"": 0.9, ""max_iter"": 300, ""convergence_iter"": 20, ""preference"": ""1%-tile of -squared euclidean similarity"", ""affinity"": ""precomputed""}"

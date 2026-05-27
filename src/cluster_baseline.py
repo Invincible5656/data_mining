@@ -28,7 +28,12 @@ from typing import Callable
 
 import numpy as np
 import pandas as pd
-from sklearn.cluster import OPTICS, AffinityPropagation, Birch
+from sklearn.cluster import (
+    OPTICS,
+    AffinityPropagation,
+    Birch,
+    cluster_optics_dbscan,
+)
 from sklearn.metrics.pairwise import euclidean_distances
 
 from . import data
@@ -45,17 +50,25 @@ SEED = 42
 # --------------------------- 各算法封装 ---------------------------
 
 def run_optics(X: np.ndarray, K: int) -> np.ndarray:
-    # 高维下默认 xi=0.05 / min_samples=10 会让 reachability 切割退化到单簇。
-    # min_samples=5: sklearn 默认；xi=0.01: 对密度变化更敏感，能切出多个簇
-    model = OPTICS(
-        min_samples=5,
-        metric="euclidean",
-        cluster_method="xi",
-        xi=0.01,
-        n_jobs=-1,
-    )
+    # 在 617D 上 xi 模式总是退化（要么单簇，要么 90% 噪声）。
+    # 改用两步法：先让 OPTICS 算 reachability / core_distances，
+    # 再用 cluster_optics_dbscan 以一个数据自适应 eps 提取簇。
+    # eps 取 80%-tile of core_distances：保证 ~80% 的点能成为 core，
+    # 控制噪声比例不失控。
+    model = OPTICS(min_samples=5, metric="euclidean", n_jobs=-1)
     model.fit(X)
-    return model.labels_
+
+    finite_core = model.core_distances_[np.isfinite(model.core_distances_)]
+    eps = float(np.percentile(finite_core, 80))
+    print(f"    [OPTICS] auto eps = 80%-tile of core_distances = {eps:.3f}")
+
+    labels = cluster_optics_dbscan(
+        reachability=model.reachability_,
+        core_distances=model.core_distances_,
+        ordering=model.ordering_,
+        eps=eps,
+    )
+    return labels
 
 
 def run_birch(X: np.ndarray, K: int) -> np.ndarray:
@@ -73,9 +86,11 @@ def run_ap(X: np.ndarray, K: int) -> np.ndarray:
     S = (-euclidean_distances(X, X, squared=True)).astype(np.float32)
     n = len(S)
     off_diag = S[~np.eye(n, dtype=bool)]
-    preference = float(np.percentile(off_diag, 5))
+    # 5% 分位下还是 183 簇，调到 1%。理论上 26 簇需要 ~0.33% 的点做 exemplar，
+    # 1% 是个折中起点；如果还多，再继续往 0.5%/0.1% 收
+    preference = float(np.percentile(off_diag, 1))
     del off_diag
-    print(f"    [AP] preference = 5%-tile = {preference:.2f}")
+    print(f"    [AP] preference = 1%-tile = {preference:.2f}")
 
     model = AffinityPropagation(
         damping=0.9,
@@ -93,12 +108,13 @@ ALGORITHMS: list[tuple[str, str, Callable[[np.ndarray, int], np.ndarray], dict]]
     # cache slug 里编了关键超参版本号，超参一改 slug 就变，老 cache 自动失效
     ("BIRCH", "birch", run_birch,
      {"n_clusters": "K", "threshold": 0.5, "branching_factor": 50}),
-    ("OPTICS", "optics_xi001_ms5", run_optics,
+    ("OPTICS", "optics_dbscan_p80", run_optics,
      {"min_samples": 5, "metric": "euclidean",
-      "cluster_method": "xi", "xi": 0.01}),
-    ("Affinity Propagation", "ap_pref_p5", run_ap,
+      "extraction": "cluster_optics_dbscan",
+      "eps": "80%-tile of core_distances (auto)"}),
+    ("Affinity Propagation", "ap_pref_p1", run_ap,
      {"damping": 0.9, "max_iter": 300, "convergence_iter": 20,
-      "preference": "5%-tile of -squared euclidean similarity",
+      "preference": "1%-tile of -squared euclidean similarity",
       "affinity": "precomputed"}),
 ]
 
