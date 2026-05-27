@@ -1,0 +1,227 @@
+{
+  "user_name_pinyin": "lanjiajun",
+  "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "distance_metric": "L2 (Euclidean) on raw embeddings",
+  "selected_algorithms": [
+    {
+      "name": "OPTICS",
+      "l2_distance": 3.2762162685394287
+    },
+    {
+      "name": "BIRCH",
+      "l2_distance": 3.7939791679382324
+    },
+    {
+      "name": "Affinity Propagation",
+      "l2_distance": 5.162064075469971
+    }
+  ],
+  "selected_dataset": {
+    "name": "ISOLET",
+    "l2_distance": 2.9959375858306885
+  },
+  "all_algorithm_distances": [
+    {
+      "name": "OPTICS",
+      "l2_distance": 3.2762162685394287
+    },
+    {
+      "name": "BIRCH",
+      "l2_distance": 3.7939791679382324
+    },
+    {
+      "name": "Affinity Propagation",
+      "l2_distance": 5.162064075469971
+    },
+    {
+      "name": "K-Means",
+      "l2_distance": 5.266982078552246
+    },
+    {
+      "name": "DBSCAN",
+      "l2_distance": 5.399716854095459
+    },
+    {
+      "name": "Mean Shift",
+      "l2_distance": 5.699615478515625
+    },
+    {
+      "name": "Hierarchical Clustering",
+      "l2_distance": 6.010217189788818
+    },
+    {
+      "name": "Spectral Clustering",
+      "l2_distance": 6.014834403991699
+    }
+  ],
+  "all_dataset_distances": [
+    {
+      "name": "ISOLET",
+      "l2_distance": 2.9959375858306885
+    },
+    {
+      "name": "Gisette",
+      "l2_distance": 3.6955506801605225
+    },
+    {
+      "name": "Anuran Calls MFCCs",
+      "l2_distance": 4.570580005645752
+    },
+    {
+      "name": "Nursery",
+      "l2_distance": 4.647869110107422
+    },
+    {
+      "name": "HTRU2",
+      "l2_distance": 4.713215351104736
+    },
+    {
+      "name": "Avila",
+      "l2_distance": 4.807564735412598
+    },
+    {
+      "name": "Codon Usage",
+      "l2_distance": 5.055561065673828
+    },
+    {
+      "name": "MoCap Hand Postures",
+      "l2_distance": 5.20292854309082
+    },
+    {
+      "name": "Covertype",
+      "l2_distance": 5.262178897857666
+    },
+    {
+      "name": "Firm-Teacher Clave-Direction Classification",
+      "l2_distance": 5.2950639724731445
+    },
+    {
+      "name": "Localization Data for Person Activity",
+      "l2_distance": 5.476878643035889
+    },
+    {
+      "name": "Frogs Anuran Calls",
+      "l2_distance": 5.483495235443115
+    },
+    {
+      "name": "Statlog Landsat Satellite",
+      "l2_distance": 5.522870063781738
+    },
+    {
+      "name": "Census-Income KDD",
+      "l2_distance": 5.532826900482178
+    },
+    {
+      "name": "Statlog Shuttle",
+      "l2_distance": 5.573800563812256
+    },
+    {
+      "name": "Optical Recognition of Handwritten Digits",
+      "l2_distance": 5.636379241943359
+    },
+    {
+      "name": "Adult",
+      "l2_distance": 5.6705217361450195
+    },
+    {
+      "name": "Crowdsourced Mapping",
+      "l2_distance": 5.689576625823975
+    },
+    {
+      "name": "Waveform Database Generator Version 2",
+      "l2_distance": 5.696404457092285
+    },
+    {
+      "name": "Online News Popularity",
+      "l2_distance": 5.717155456542969
+    },
+    {
+      "name": "Letter Recognition",
+      "l2_distance": 5.737485885620117
+    },
+    {
+      "name": "Page Blocks Classification",
+      "l2_distance": 5.738260746002197
+    },
+    {
+      "name": "Pen-Based Recognition of Handwritten Digits",
+      "l2_distance": 5.743532657623291
+    },
+    {
+      "name": "Connect-4",
+      "l2_distance": 5.826906681060791
+    },
+    {
+      "name": "Chess King-Rook vs King",
+      "l2_distance": 5.839602470397949
+    },
+    {
+      "name": "Wall-Following Robot Navigation",
+      "l2_distance": 5.850296974182129
+    },
+    {
+      "name": "Gesture Phase Segmentation",
+      "l2_distance": 5.942700386047363
+    },
+    {
+      "name": "MAGIC Gamma Telescope",
+      "l2_distance": 6.010760307312012
+    },
+    {
+      "name": "Smartphone-Based Recognition of Human Activities",
+      "l2_distance": 6.040134429931641
+    },
+    {
+      "name": "Dry Bean Dataset",
+      "l2_distance": 6.078395366668701
+    },
+    {
+      "name": "Bank Marketing",
+      "l2_distance": 6.105721950531006
+    },
+    {
+      "name": "Default of Credit Card Clients",
+      "l2_distance": 6.113220691680908
+    },
+    {
+      "name": "Human Activity Recognition Using Smartphones",
+      "l2_distance": 6.136888027191162
+    },
+    {
+      "name": "Online Shoppers Purchasing Intention",
+      "l2_distance": 6.184608459472656
+    },
+    {
+      "name": "Skin Segmentation",
+      "l2_distance": 6.211014747619629
+    },
+    {
+      "name": "EEG Eye State",
+      "l2_distance": 6.216379165649414
+    },
+    {
+      "name": "Mushroom",
+      "l2_distance": 6.308817386627197
+    },
+    {
+      "name": "Diabetes 130 US Hospitals",
+      "l2_distance": 6.394258499145508
+    },
+    {
+      "name": "HCV Data",
+      "l2_distance": 6.4822845458984375
+    },
+    {
+      "name": "Polish Companies Bankruptcy",
+      "l2_distance": 6.508331298828125
+    },
+    {
+      "name": "Sensorless Drive Diagnosis",
+      "l2_distance": 6.535021781921387
+    },
+    {
+      "name": "Gas Sensor Array Drift",
+      "l2_distance": 6.64743709564209
+    }
+  ]
+}

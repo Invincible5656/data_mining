@@ -1,0 +1,4 @@
+feature_space,algorithm,n_clusters_target,n_clusters_pred,n_noise,noise_ratio,ari,nmi,seconds,params
+raw,BIRCH,26,26,0,0.0,0.5016473230566652,0.7438763191032529,6.160246849060059,"{""n_clusters"": ""K"", ""threshold"": 0.5, ""branching_factor"": 50}"
+raw,OPTICS,26,1,0,0.0,0.0,0.0,42.39140200614929,"{""min_samples"": 10, ""metric"": ""euclidean"", ""cluster_method"": ""xi""}"
+raw,Affinity Propagation,26,338,0,0.0,0.11872636051833851,0.6066725606608521,28.08080816268921,"{""damping"": 0.9, ""max_iter"": 200, ""convergence_iter"": 15}"
