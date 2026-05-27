@@ -1,4 +1,4 @@
 feature_space,algorithm,n_clusters_target,n_clusters_pred,n_noise,noise_ratio,ari,nmi,seconds,params
 raw,BIRCH,26,26,0,0.0,0.5016473230566652,0.7438763191032529,6.160246849060059,"{""n_clusters"": ""K"", ""threshold"": 0.5, ""branching_factor"": 50}"
-raw,OPTICS,26,1,0,0.0,0.0,0.0,42.39140200614929,"{""min_samples"": 10, ""metric"": ""euclidean"", ""cluster_method"": ""xi""}"
-raw,Affinity Propagation,26,338,0,0.0,0.11872636051833851,0.6066725606608521,28.08080816268921,"{""damping"": 0.9, ""max_iter"": 200, ""convergence_iter"": 15}"
+raw,OPTICS,26,91,7132,0.9147107861998205,0.00036737665864220007,0.12468434009822764,40.77197313308716,"{""min_samples"": 5, ""metric"": ""euclidean"", ""cluster_method"": ""xi"", ""xi"": 0.01}"
+raw,Affinity Propagation,26,183,0,0.0,0.1852353006797233,0.6328722461420047,27.170530080795288,"{""damping"": 0.9, ""max_iter"": 300, ""convergence_iter"": 20, ""preference"": ""5%-tile of -squared euclidean similarity"", ""affinity"": ""precomputed""}"

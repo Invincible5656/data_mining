@@ -29,6 +29,7 @@ from typing import Callable
 import numpy as np
 import pandas as pd
 from sklearn.cluster import OPTICS, AffinityPropagation, Birch
+from sklearn.metrics.pairwise import euclidean_distances
 
 from . import data
 from .metrics import cluster_stats, evaluate
@@ -44,10 +45,15 @@ SEED = 42
 # --------------------------- 各算法封装 ---------------------------
 
 def run_optics(X: np.ndarray, K: int) -> np.ndarray:
-    # min_samples=10：高维下默认 5 太小、噪声会过多
-    # cluster_method="xi"：变密度更稳健，比 "dbscan" 模式更通用
-    model = OPTICS(min_samples=10, metric="euclidean",
-                   cluster_method="xi", n_jobs=-1)
+    # 高维下默认 xi=0.05 / min_samples=10 会让 reachability 切割退化到单簇。
+    # min_samples=5: sklearn 默认；xi=0.01: 对密度变化更敏感，能切出多个簇
+    model = OPTICS(
+        min_samples=5,
+        metric="euclidean",
+        cluster_method="xi",
+        xi=0.01,
+        n_jobs=-1,
+    )
     model.fit(X)
     return model.labels_
 
@@ -60,12 +66,26 @@ def run_birch(X: np.ndarray, K: int) -> np.ndarray:
 
 
 def run_ap(X: np.ndarray, K: int) -> np.ndarray:
-    # damping=0.9 提高数值稳定性，max_iter / convergence_iter 给慢收敛余量
-    # preference=None -> 用相似度中位数，簇数由算法自行决定
+    # 默认 preference = median(similarity) 在大样本+高维上产生过多簇（>300）。
+    # 取相似度的 5% 分位作为 preference：让大多数样本不做 exemplar，
+    # 强制少数高质量样本做聚类中心，从而把簇数压回到 O(K) 量级。
+    print("    [AP] 计算相似度矩阵 (7797×7797 float32, ~240 MB) ...")
+    S = (-euclidean_distances(X, X, squared=True)).astype(np.float32)
+    n = len(S)
+    off_diag = S[~np.eye(n, dtype=bool)]
+    preference = float(np.percentile(off_diag, 5))
+    del off_diag
+    print(f"    [AP] preference = 5%-tile = {preference:.2f}")
+
     model = AffinityPropagation(
-        damping=0.9, max_iter=200, convergence_iter=15, random_state=SEED
+        damping=0.9,
+        max_iter=300,
+        convergence_iter=20,
+        preference=preference,
+        random_state=SEED,
+        affinity="precomputed",
     )
-    return model.fit_predict(X)
+    return model.fit_predict(S)
 
 
 ALGORITHMS: list[tuple[str, str, Callable[[np.ndarray, int], np.ndarray], dict]] = [
@@ -73,10 +93,13 @@ ALGORITHMS: list[tuple[str, str, Callable[[np.ndarray, int], np.ndarray], dict]]
     # cache slug 里编了关键超参版本号，超参一改 slug 就变，老 cache 自动失效
     ("BIRCH", "birch", run_birch,
      {"n_clusters": "K", "threshold": 0.5, "branching_factor": 50}),
-    ("OPTICS", "optics", run_optics,
-     {"min_samples": 10, "metric": "euclidean", "cluster_method": "xi"}),
-    ("Affinity Propagation", "ap", run_ap,
-     {"damping": 0.9, "max_iter": 200, "convergence_iter": 15}),
+    ("OPTICS", "optics_xi001_ms5", run_optics,
+     {"min_samples": 5, "metric": "euclidean",
+      "cluster_method": "xi", "xi": 0.01}),
+    ("Affinity Propagation", "ap_pref_p5", run_ap,
+     {"damping": 0.9, "max_iter": 300, "convergence_iter": 20,
+      "preference": "5%-tile of -squared euclidean similarity",
+      "affinity": "precomputed"}),
 ]
 
 
