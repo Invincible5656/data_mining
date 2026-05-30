@@ -1,20 +1,12 @@
 """
-加载 UCI ISOLET 数据集 + 预处理（缺失值检查、标签编码、标准化），
-缓存到 data/isolet.npz 供后续阶段（baseline 聚类 / AE 训练 / AE 特征聚类）共享。
+加载并预处理 UCI ISOLET，缓存到 data/isolet.npz 供后续阶段共享。
 
-ISOLET 信息（UCI id=54）:
-    样本数: 7797
-    特征数: 617（全部连续数值，原始范围 ~[-1, 1]）
-    类别数: 26（A–Z 字母语音）
-    缺失值: 无
+ISOLET (UCI id=54): 7797 样本、617 维连续特征、26 类（A–Z 字母语音）、无缺失。
+预处理: 标签编码到 0..25；StandardScaler 标准化。
+约定: 聚类用全量 (X, y)，y 仅作 ARI/NMI 评价不参与聚类；
+      AE 训练从 train_idx/val_idx 切（90/10 stratified），val 用于早停。
 
-约定:
-    - 聚类阶段使用全量 (X, y)；y 仅用于 ARI/NMI 评价，不参与聚类。
-    - AE 训练阶段从 train_idx / val_idx 中切；val 用于早停和监控重构 loss。
-    - 标签从原始 1..26 编码到 0..25，方便 sklearn / np.bincount。
-
-运行:
-    python -m src.data
+运行: python -m src.data
 """
 
 from __future__ import annotations
@@ -168,7 +160,7 @@ def summary(ds: Dataset) -> str:
         f"样本数            : {ds.n_samples}\n"
         f"特征数            : {ds.n_features}\n"
         f"类别数 (K)        : {ds.n_classes}\n"
-        f"每类样本           : min={counts.min()}, max={counts.max()}, mean={counts.mean():.1f}\n"
+        f"每类样本          : min={counts.min()}, max={counts.max()}, mean={counts.mean():.1f}\n"
         f"X 全局 mean / std : {ds.X.mean():+.4e} / {ds.X.std():.4f}\n"
         f"X dtype / 范围    : {ds.X.dtype}, [{ds.X.min():.3f}, {ds.X.max():.3f}]\n"
         f"AE train / val    : {len(ds.train_idx)} / {len(ds.val_idx)}\n"

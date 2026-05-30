@@ -1,13 +1,9 @@
 """
-Part 2 (AE 特征空间): 在训好的自编码器每个隐层 (H1..H5) 上跑 BIRCH / OPTICS / Affinity Propagation。
+Part 2 (AE 特征空间): 在训好的 AE 各隐层 (H1..H5) 上跑
+BIRCH / OPTICS / Affinity Propagation，结果写到 results/clustering_ae.csv。
 
-H1: 256d        ↔ PCA-256
-H2: 128d        ↔ PCA-128
-H3: 64d (bottleneck) ↔ PCA-64
-H4: 128d        ↔ PCA-128
-H5: 256d        ↔ PCA-256
-
-同维严格对比：H3 vs PCA-64、H2/H4 vs PCA-128、H1/H5 vs PCA-256，验证非线性是否额外贡献。
+各层维度: H1/H5=256, H2/H4=128, H3=64(瓶颈)，与同维 PCA 严格对比，
+验证非线性是否带来额外提升。
 
 运行: python -m src.cluster_ae [--force]
 """

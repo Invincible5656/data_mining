@@ -1,15 +1,11 @@
 """
-用 Word Embedding 在姓名拼音 vs 候选算法/数据集名之间计算 L2 距离，
-选出最近的 3 个聚类算法 + 1 个 UCI 分类数据集。
+用 Word Embedding 在姓名拼音与候选算法/数据集名之间算 L2 距离，
+选出最近的 3 个聚类算法 + 1 个 UCI 数据集，结果写入 results/selection.json。
 
-模型：sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
-    多语言模型，能同时编码拼音（latin）与英文术语，落到同一向量空间。
+模型: paraphrase-multilingual-MiniLM-L12-v2（多语言，拼音与英文术语落到同一空间）。
+距离: 原始 embedding 上的 L2（不做归一化）。
 
-距离：原始 embedding 上的 L2（不做 L2 normalize）。
-
-输出：results/selection.json
-运行：
-    python -m src.select
+运行: python -m src.select
 """
 
 from __future__ import annotations
@@ -21,12 +17,8 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 
 
-# ----------------------------- 配置 -----------------------------
-
-# 姓名全拼。如与你的拼音不同，改这里即可（例如 "lan jia jun" / "Lan Jiajun"）。
 USER_NAME_PINYIN = "lanjiajun"
 
-# 8 个候选聚类算法（顺序与作业一致；名称对齐 sklearn 文档表述）
 CLUSTERING_ALGORITHMS = [
     "Affinity Propagation",
     "BIRCH",
@@ -39,8 +31,6 @@ CLUSTERING_ALGORITHMS = [
 ]
 
 # UCI 分类数据集候选池（样本数 ≥ 5000）。
-# 选自 UCI ML Repository 的 Classification Task。
-# 命名尽量与 UCI 官网 / ucimlrepo 一致，方便后续直接拉取。
 UCI_CLASSIFICATION_DATASETS = [
     "Adult",
     "Bank Marketing",

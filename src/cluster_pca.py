@@ -1,13 +1,9 @@
 """
-PCA 对照实验：把 ISOLET 标准化特征降到 {64, 128, 256} 三个维度，
-每个维度用 pipeline.run_pipeline 跑 BIRCH / OPTICS / Affinity Propagation，
-结果写到 results/clustering_pca.csv。
+PCA 对照实验：把 ISOLET 标准化特征降到 {64, 128, 256}，各维度跑
+BIRCH / OPTICS / Affinity Propagation，结果写到 results/clustering_pca.csv。
 
-维度选择对齐 AE 架构 (256, 128, 64, 128, 256) 的 unique 隐藏层尺寸：
-    PCA-256  对应  AE-H1 / AE-H5
-    PCA-128  对应  AE-H2 / AE-H4
-    PCA-64   对应  AE-H3 (bottleneck)
-后面 AE 训练好后做 PCA-d vs AE-d 严格同维对比，验证非线性是否额外贡献。
+维度对齐 AE 隐层 (PCA-256↔H1/H5, PCA-128↔H2/H4, PCA-64↔H3 瓶颈)，
+用于 PCA-d vs AE-d 同维对比，验证非线性是否带来额外提升。
 
 运行: python -m src.cluster_pca [--force]
 """

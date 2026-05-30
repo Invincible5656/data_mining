@@ -1,27 +1,12 @@
 """
 对称欠完备自编码器 (PyTorch)。
 
-架构: I=617 - H1=256 - H2=128 - H3=64 - H4=128 - H5=256 - O=617
-    - H3 是 bottleneck，对应 PCA-64
-    - H1/H5 对应 PCA-256，H2/H4 对应 PCA-128
-    - 隐层全部 ReLU；输出层不加激活（输入是 StandardScaler 标准化后的，可正可负）
-
-训练:
-    - 损失   : MSE(reconstruction, input)
-    - 优化器 : Adam, lr=1e-3, weight_decay=0
-    - batch  : 256
-    - epochs : 最多 200，patience=15 早停（看 val MSE）
-    - 数据切分: 复用 data.py 里的 train_idx / val_idx (90/10 stratified)
-    - 设备   : MPS (Apple Silicon) -> CUDA -> CPU 自动选
-
-产出:
-    - models/ae.pt       : 训练完的 state_dict + 架构元信息
-    - results/ae_loss.csv: 每个 epoch 的 train/val loss
-
-接口:
-    Autoencoder.encode_layers(X) -> dict[name -> activation]
-        返回 {"h1": ..., "h2": ..., "h3": ..., "h4": ..., "h5": ...}
-        供 cluster_ae.py 喂给 pipeline.run_pipeline。
+架构: 617 - 256 - 128 - 64 - 128 - 256 - 617（H3=64 为瓶颈，对应 PCA-64）。
+隐层 ReLU，输出层无激活（输入经 StandardScaler，可正可负）。
+训练: MSE 损失 + Adam(lr=1e-3)，batch=256，最多 200 epoch，patience=15 早停（看 val MSE）；
+      train/val 复用 data.py 的 90/10 stratified 切分；设备 MPS > CUDA > CPU 自动选。
+产出: models/ae.pt（权重 + 架构元信息）、results/ae_loss.csv（每 epoch loss）。
+encode_layers(X) 逐层前向，返回 {h1..h5} 激活供 cluster_ae.py 聚类。
 
 运行: python -m src.autoencoder [--force]
 """

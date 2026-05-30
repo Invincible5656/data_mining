@@ -2,13 +2,9 @@
 通用聚类流水线：在给定特征空间 X 上跑 BIRCH / OPTICS / Affinity Propagation，
 带预测缓存 + ARI/NMI 评价，返回 DataFrame。
 
-cluster_baseline.py / cluster_pca.py / cluster_ae.py 共用本流水线，
-区别只在喂进来的 X 是什么（raw / PCA / AE 各隐藏层激活）。
-
-Cache 文件命名: results/predictions/{feature_space}_{algo_slug}.npy
-    feature_space 例: raw, pca64, h3
-    algo_slug 例: birch, optics_dbscan_p80, ap_pref_p1
-    -> raw_birch.npy / pca64_optics_dbscan_p80.npy / h3_ap_pref_p1.npy
+baseline / pca / ae 三个入口共用本流水线，区别只在喂进来的 X（raw / PCA / AE 各隐层）。
+缓存命名: results/predictions/{feature_space}_{algo_slug}.npy
+          例 raw_birch.npy / pca64_optics_dbscan_p80.npy / h3_ap_pref_p1.npy
 """
 
 from __future__ import annotations
@@ -87,8 +83,8 @@ def run_ap(X: np.ndarray, K: int) -> np.ndarray:
 
 
 ALGORITHMS: list[tuple[str, str, Callable[[np.ndarray, int], np.ndarray], dict]] = [
-    # (display_name, algo_slug, runner, params_for_logging)
-    # 注意：超参一变，algo_slug 必须跟着变，否则会读到错的 cache
+    # (显示名, 算法 slug, 运行函数, 记录用参数)
+    # 注意：超参一变，algo_slug 必须跟着变，否则会读到错的缓存
     ("BIRCH", "birch", run_birch,
      {"n_clusters": "K", "threshold": 0.5, "branching_factor": 50}),
     ("OPTICS", "optics_dbscan_p80", run_optics,
